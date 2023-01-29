@@ -15,13 +15,8 @@ import * as ImagePicker from "expo-image-picker";
 import { useMutation, useQueryClient } from "react-query";
 import firebaseConfig from "../../firebaseConfig";
 import { initializeApp } from "firebase/app";
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytes,
-  uploadBytesResumable,
-} from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { useToast } from "react-native-toast-notifications";
 
 import colours from "../constants/colours";
 import ProfilePicture from "../components/ProfilePicture";
@@ -36,6 +31,7 @@ const NewTweetScreen = () => {
   const [imageUrl, setImageUrl] = useState("");
 
   const navigation = useNavigation();
+  const toast = useToast();
 
   const [status, requestPermission] = ImagePicker.useCameraPermissions();
 
@@ -139,6 +135,7 @@ const NewTweetScreen = () => {
     e.preventDefault();
     mutation.mutate({ content, img: imageUrl });
     navigation.goBack();
+    toast.show("Tweet sent", {type: "success"});
   };
 
   return (
