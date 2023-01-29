@@ -13,7 +13,13 @@ const App = () => {
   return (
     <AuthContextProvider>
       <SafeAreaProvider>
-        <ToastProvider placement="top" offset={50} duration={3000} successColor="#4D9FEC">
+        <ToastProvider
+          placement="top"
+          offset={50}
+          duration={3000}
+          successColor="#4D9FEC"
+          animationType="slide-in"
+        >
           <QueryClientProvider client={queryClient}>
             <RootNavigator />
             <StatusBar />

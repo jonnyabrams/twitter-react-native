@@ -10,6 +10,7 @@ import {
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { Ionicons, Feather, FontAwesome } from "@expo/vector-icons";
 import axios from "axios";
+import { useToast } from "react-native-toast-notifications";
 
 import colours from "../constants/colours";
 import { useState } from "react";
@@ -26,6 +27,8 @@ const RegisterScreen = ({ navigation }: IProps) => {
   const [emailIsValid, setEmailIsValid] = useState(true);
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [passwordIsValid, setPasswordIsValid] = useState(true);
+
+  const toast = useToast();
 
   const validEmailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
@@ -51,6 +54,7 @@ const RegisterScreen = ({ navigation }: IProps) => {
       try {
         await axios.post("http://localhost:8000/api/users/register", newUser);
         navigation.navigate("Login");
+        toast.show("Account created! Please log in");
       } catch (error) {
         console.log(error);
       }
