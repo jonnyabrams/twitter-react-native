@@ -4,7 +4,6 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import RootNavigator from "./src/navigation/RootNavigator";
-import AuthNavigator from "./src/navigation/AuthNavigator";
 import AuthContextProvider from "./src/context/AuthContext";
 
 const queryClient = new QueryClient();
