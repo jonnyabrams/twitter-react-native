@@ -81,7 +81,7 @@ const NewTweetScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <AntDesign name="close" size={30} color={colours.light.background} />
+          <Text style={{fontSize: 20}}>Cancel</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Tweet</Text>
