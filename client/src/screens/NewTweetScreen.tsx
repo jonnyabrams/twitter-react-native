@@ -64,52 +64,54 @@ const NewTweetScreen = () => {
           // for some reason fetch has to be passed result.assets etc not imageUrl
           const img = await fetch(result.assets[0].uri);
           const blob = await img.blob();
-          console.log("uploading image");
-          const uploadTask = uploadBytesResumable(storageRef, blob);
+          await uploadBytes(storageRef, blob);
+          await getDownloadURL(storageRef).then((url) => {
+            setImageUrl(url);
+          });
 
-          // Listen for state changes, errors, and completion of the upload.
-          uploadTask.on(
-            "state_changed",
-            (snapshot: any) => {
-              // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-              const progress =
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-              console.log("Upload is " + progress + "% done");
-              switch (snapshot.state) {
-                case "paused":
-                  console.log("Upload is paused");
-                  break;
-                case "running":
-                  console.log("Upload is running");
-                  break;
-              }
-            },
-            (error) => {
-              // A full list of error codes is available at
-              // https://firebase.google.com/docs/storage/web/handle-errors
-              switch (error.code) {
-                case "storage/unauthorized":
-                  console.log(
-                    "User doesn't have permission to access the object"
-                  );
-                  break;
-                case "storage/canceled":
-                  console.log("User canceled the upload");
-                  break;
-                case "storage/unknown":
-                  console.log(
-                    "Unknown error occurred, inspect error.serverResponse"
-                  );
-                  break;
-              }
-            },
-            () => {
-              // Upload completed successfully, now we can get the download URL
-              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                setImageUrl(downloadURL);
-              });
-            }
-          );
+          // // Listen for state changes, errors, and completion of the upload.
+          // uploadTask.on(
+          //   "state_changed",
+          //   (snapshot: any) => {
+          //     // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          //     const progress =
+          //       (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          //     console.log("Upload is " + progress + "% done");
+          //     switch (snapshot.state) {
+          //       case "paused":
+          //         console.log("Upload is paused");
+          //         break;
+          //       case "running":
+          //         console.log("Upload is running");
+          //         break;
+          //     }
+          //   },
+          //   (error) => {
+          //     // A full list of error codes is available at
+          //     // https://firebase.google.com/docs/storage/web/handle-errors
+          //     switch (error.code) {
+          //       case "storage/unauthorized":
+          //         console.log(
+          //           "User doesn't have permission to access the object"
+          //         );
+          //         break;
+          //       case "storage/canceled":
+          //         console.log("User canceled the upload");
+          //         break;
+          //       case "storage/unknown":
+          //         console.log(
+          //           "Unknown error occurred, inspect error.serverResponse"
+          //         );
+          //         break;
+          //     }
+          //   },
+          //   () => {
+          //     // Upload completed successfully, now we can get the download URL
+          //     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          //       setImageUrl(downloadURL);
+          //     });
+          //   }
+          // );
         }
       } else {
         alert("You need to enable permissions to access library");
