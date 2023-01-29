@@ -32,6 +32,7 @@ initializeApp(firebaseConfig);
 
 const NewTweetScreen = () => {
   const [content, setContent] = useState("");
+  const [imagePreview, setImagePreview] = useState("");
   const [imageUrl, setImageUrl] = useState("");
 
   const navigation = useNavigation();
@@ -55,11 +56,12 @@ const NewTweetScreen = () => {
         });
 
         if (!result.canceled) {
-          setImageUrl(result.assets[0].uri);
+          setImagePreview(result.assets[0].uri);
           const storage = getStorage();
           const storageRef = ref(storage, `img${Date.now()}`);
 
           // convert img into array of bytes (blob)
+          // for some reason fetch has to be passed result.assets etc not imageUrl
           const img = await fetch(result.assets[0].uri);
           const blob = await img.blob();
           console.log("uploading image");
@@ -104,8 +106,7 @@ const NewTweetScreen = () => {
             () => {
               // Upload completed successfully, now we can get the download URL
               getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                console.log("File available at", downloadURL);
-                //perform your task
+                setImageUrl(downloadURL);
               });
             }
           );
@@ -134,11 +135,8 @@ const NewTweetScreen = () => {
 
   const handleSubmit = async (e: GestureResponderEvent) => {
     e.preventDefault();
-    // let imgUrl = "";
-    // if (file) imgUrl = await upload();
     mutation.mutate({ content, img: imageUrl });
-    setContent("");
-    // setFile(null);
+    navigation.goBack();
   };
 
   return (
@@ -165,9 +163,9 @@ const NewTweetScreen = () => {
             onChangeText={(text) => setContent(text)}
             value={content}
           />
-          {imageUrl && (
+          {imagePreview && (
             <View style={styles.imageContainer}>
-              <Image source={{ uri: imageUrl }} style={styles.image} />
+              <Image source={{ uri: imagePreview }} style={styles.image} />
               <AntDesign
                 name="closecircle"
                 size={25}
